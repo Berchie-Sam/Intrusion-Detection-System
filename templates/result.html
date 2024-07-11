@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Intrusion Detection System - Result</h1>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <section>
+                <h2>Result</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Prediction</h5>
+                        <p class="card-text">Predicted Labels: {{ data }}</p>
+                        <div class="table-responsive">
+                            {{ original_data | safe }}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS and any additional scripts -->
+    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+</body>
+</html>

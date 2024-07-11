@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload File</title>
+    <!-- JQuery from CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Intrusion Detection System</h1>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <section>
+                <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+                    <label for="file">Upload CSV file:</label>
+                    <input type="file" id="file" name="file" accept=".csv" required>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+            </section>
+
+            {% if data %}
+            <section>
+                <h2>Uploaded Data Preview</h2>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Select</th> <!-- Checkbox column header -->
+                                {% for column in columns %}
+                                <th>{{ column }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data %}
+                            <tr>
+                                <td><input type="checkbox" name="selected_rows" value="{{ loop.index0 }}"></td> <!-- Checkbox for each row -->
+                                {% for value in row %}
+                                <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <form id="selectModelForm" method="POST" action="{{ url_for('predict_selected') }}">
+                    <input type="hidden" name="file_path" value="{{ file_path }}">
+                    <input type="hidden" name="model" value="{{ models }}">
+                </form>
+                <div class="mt-3">
+                    <button type="button" class="btn btn-primary" id="proceedSelectedButton">Predict Selected Rows</button>
+                    <button type="button" class="btn btn-primary" id="proceedAllButton">Predict All Rows</button>
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </main>
+
+    <!-- Bootstrap JS and any additional scripts -->
+    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+    <!-- Custom JavaScript -->
+    <script>
+        $(document).ready(function() {
+            $('#proceedSelectedButton').click(function() {
+                var selectedRows = [];
+                $('input[name="selected_rows"]:checked').each(function() {
+                    selectedRows.push($(this).val());
+                });
+                if (selectedRows.length > 0) {
+                    $('#selectModelForm').append('<input type="hidden" name="selected_rows" value="' + selectedRows.join(',') + '">');
+                    $('#selectModelForm').attr('action', '/predict_selected');
+                    $('#selectModelForm').submit();
+                } else {
+                    alert('Please select at least one row.');
+                }
+            });
+
+            $('#proceedAllButton').click(function() {
+                $('#selectModelForm').attr('action', '/predict_all');
+                $('#selectModelForm').submit();
+            });
+        });
+    </script>
+</body>
+</html>

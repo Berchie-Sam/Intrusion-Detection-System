@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Intrusion Detection System</title>
+	<!-- JQuery from CDN -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Welcome to Intrusion Detection System</h1>
+            <p>A system for detecting network intrusions using various machine learning models.</p>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <section>
+                <h2>Select a Model</h2>
+                <form id="selectModelForm" action="/select_model" method="POST">
+                    <div class="form-group">
+                        <label for="modelSelect">Choose a model:</label>
+                        <select class="form-control" id="modelSelect" name="model">
+                            {% for model, model_file in models.items() %}
+                            <option value="{{ model }}">{{ model }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="proceedButton">Proceed</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS from CDN -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script>
+        $(document).ready(function() {
+            $(document).ready(function() {
+        $('#proceedButton').click(function() {
+            var selectedModel = $('#modelSelect').val();
+            $('#modelModal').modal('show');  // Show modal dialog
+            $('#modelModal').find('.modal-title').text(selectedModel + ' Options');
+        });
+
+        $('#uploadFileButton').click(function() {
+            $('#selectModelForm').attr('action', '/upload');  // Ensure correct action URL
+            $('#selectModelForm').submit();
+        });
+
+        $('#enterValuesButton').click(function() {
+            $('#selectModelForm').attr('action', '/manual_entry');  // Ensure correct action URL
+            $('#selectModelForm').submit();
+        });
+    });
+    </script>
+
+    <!-- Modal for Model Options -->
+    <div class="modal fade" id="modelModal" tabindex="-1" role="dialog" aria-labelledby="modelModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modelModalLabel">Model Options</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Select how you want to proceed:</p>
+                    <button type="button" class="btn btn-primary" id="uploadFileButton">Upload a File</button>
+                    <button type="button" class="btn btn-primary" id="enterValuesButton">Enter Values Manually</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

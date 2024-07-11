@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Entry</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Intrusion Detection System - Manual Entry</h1>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <section>
+                <h2>Manual Data Entry</h2>
+                <form method="POST" action="{{ url_for('upload') }}">
+                    {% for column in columns %}
+                    <div class="form-group">
+                        <label for="{{ column }}">{{ column }}</label>
+                        <input type="text" class="form-control" id="{{ column }}" name="{{ column }}" placeholder="Enter {{ column }}">
+                    </div>
+                    {% endfor %}
+                    <div class="form-group">
+                        <label for="model">Select Model</label>
+                        <select class="form-control" id="model" name="model">
+                            {% for model, _ in models.items() %}
+                            <option value="{{ model }}">{{ model }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS and any additional scripts -->
+    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+</body>
+</html>
